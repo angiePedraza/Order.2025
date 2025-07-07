@@ -5,5 +5,11 @@
         Task<HttpResponseWrapper<T>> GetAsycn<T>(string url);
         Task<HttpResponseWrapper<object>> PostAsycn<T>(string url, T model);
         Task<HttpResponseWrapper<TActionResponse>> PostAsycn<T, TActionResponse>(string url, T model);
+
+        Task<HttpResponseWrapper<object>> DeleteAsycn<T>(string url);
+        Task<HttpResponseWrapper<object>> PutAsycn<T>(string url, T model);
+        Task<HttpResponseWrapper<TActionResponse>> PutAsycn<T, TActionResponse>(string url, T model);
+
+
     }
 }
