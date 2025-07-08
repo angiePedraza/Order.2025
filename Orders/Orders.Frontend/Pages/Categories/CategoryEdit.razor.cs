@@ -1,14 +1,15 @@
 ﻿using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
+using Orders.Frontend.Pages.Countries;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
 
-namespace Orders.Frontend.Pages.Countries
+namespace Orders.Frontend.Pages.Categories
 {
-    public partial class CountryEdit
+    public partial class CategoryEdit
     {
-        private Country? country;
-        private CountryForm? countryForm;
+        private Category? category;
+        private CategoryForm? categoryForm;
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -18,12 +19,12 @@ namespace Orders.Frontend.Pages.Countries
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsycn<Country>($"api/countries/{Id}");
+            var responseHttp = await Repository.GetAsycn<Category>($"api/categories/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/countries");
+                    NavigationManager.NavigateTo("/categories");
                 }
                 else
                 {
@@ -33,12 +34,12 @@ namespace Orders.Frontend.Pages.Countries
             }
             else
             {
-                country = responseHttp.Response;
+                category = responseHttp.Response;
             }
         }
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsycn("api/countries", country);
+            var responseHttp = await Repository.PutAsycn("api/categories", category);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();
@@ -51,15 +52,15 @@ namespace Orders.Frontend.Pages.Countries
                 Toast = true,
                 Position = SweetAlertPosition.BottomEnd,
                 ShowConfirmButton = false,
-                Title = "País editado correctamente",
+                Title = "Categoria editada correctamente",
                 Timer = 3000,
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro editado con éxito.");
         }
         private void Return()
         {
-            countryForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo("/countries");
+            categoryForm!.FormPostedSuccessfully = true;
+            NavigationManager.NavigateTo("/categories");
         }
     }
 }
