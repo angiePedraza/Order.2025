@@ -2,13 +2,13 @@
 {
     public interface IRepository
     {
-        Task<HttpResponseWrapper<T>> GetAsycn<T>(string url);
-        Task<HttpResponseWrapper<object>> PostAsycn<T>(string url, T model);
-        Task<HttpResponseWrapper<TActionResponse>> PostAsycn<T, TActionResponse>(string url, T model);
+        Task<HttpResponseWrapper<T>> GetAsync<T>(string url);
+        Task<HttpResponseWrapper<object>> PostAsync<T>(string url, T model);
+        Task<HttpResponseWrapper<TActionResponse>> PostAsync<T, TActionResponse>(string url, T model);
 
-        Task<HttpResponseWrapper<object>> DeleteAsycn<T>(string url);
-        Task<HttpResponseWrapper<object>> PutAsycn<T>(string url, T model);
-        Task<HttpResponseWrapper<TActionResponse>> PutAsycn<T, TActionResponse>(string url, T model);
+        Task<HttpResponseWrapper<object>> DeleteAsync<T>(string url);
+        Task<HttpResponseWrapper<object>> PutAsync<T>(string url, T model);
+        Task<HttpResponseWrapper<TActionResponse>> PutAsync<T, TActionResponse>(string url, T model);
 
 
     }

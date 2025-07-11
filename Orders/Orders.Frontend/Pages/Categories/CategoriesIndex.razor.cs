@@ -20,7 +20,7 @@ namespace Orders.Frontend.Pages.Categories
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsycn<List<Category>>("api/categories");
+            var responseHttp = await Repository.GetAsync<List<Category>>("api/categories");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();
@@ -43,7 +43,7 @@ namespace Orders.Frontend.Pages.Categories
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsycn<Category>($"api/categories/{category.Id}");
+            var responseHttp = await Repository.DeleteAsync<Category>($"api/categories/{category.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)

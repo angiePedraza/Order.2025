@@ -21,7 +21,7 @@ namespace Orders.Frontend.Pages.Categories
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsycn<Category>($"api/categories/{Id}");
+            var responseHttp = await Repository.GetAsync<Category>($"api/categories/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -41,7 +41,7 @@ namespace Orders.Frontend.Pages.Categories
         }
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsycn("api/categories", category);
+            var responseHttp = await Repository.PutAsync("api/categories", category);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();

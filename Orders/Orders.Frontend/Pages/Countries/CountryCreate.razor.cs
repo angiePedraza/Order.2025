@@ -16,7 +16,7 @@ namespace Orders.Frontend.Pages.Countries
 
         private async Task CreateAsycn()
         {
-            var responseHttp = await Repository.PostAsycn("api/countries", country);
+            var responseHttp = await Repository.PostAsync("api/countries", country);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();

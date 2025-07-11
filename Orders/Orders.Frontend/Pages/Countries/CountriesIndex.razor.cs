@@ -20,7 +20,7 @@ namespace Orders.Frontend.Pages.Countries
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsycn<List<Country>>("api/countries");
+            var responseHttp = await Repository.GetAsync<List<Country>>("api/countries");
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();
@@ -43,7 +43,7 @@ namespace Orders.Frontend.Pages.Countries
             {
                 return;
             }
-            var responseHttp = await Repository.DeleteAsycn<Country>($"api/countries/{country.Id}");
+            var responseHttp = await Repository.DeleteAsync<Country>($"api/countries/{country.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)

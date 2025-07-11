@@ -18,7 +18,7 @@ namespace Orders.Frontend.Pages.Countries
 
         protected async override Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsycn<Country>($"api/countries/{Id}");
+            var responseHttp = await Repository.GetAsync<Country>($"api/countries/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -38,7 +38,7 @@ namespace Orders.Frontend.Pages.Countries
         }
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsycn("api/countries", country);
+            var responseHttp = await Repository.PutAsync("api/countries", country);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();
