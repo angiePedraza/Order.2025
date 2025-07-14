@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Orders.backend.UnitsOfWork.Interfaces;
 using Orders.Backend.UnitsOfWork;
 using Orders.Shared.DTOs;
@@ -6,6 +8,7 @@ using Orders.Shared.Entities;
 
 namespace Orders.backend.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
     public class CitiesController : GenericController<City>
