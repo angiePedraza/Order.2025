@@ -19,6 +19,15 @@ namespace Orders.backend.Controllers
         {
             _categoriesUnitOfWork = categoriesUnitOfWork;
         }
+
+        [AllowAnonymous]
+        [HttpGet("combo")]
+        public async Task<IActionResult> GetComboAsync()
+        {
+            return Ok(await _categoriesUnitOfWork.GetComboAsync());
+        }
+
+
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {

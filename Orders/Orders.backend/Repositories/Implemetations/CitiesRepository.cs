@@ -55,5 +55,13 @@ namespace Orders.backend.Repositories.Implemetations
                 Result = totalPages
             };
         }
+        public async Task<IEnumerable<City>> GetComboAsync(int stateId)
+        {
+            return await _context.Cities
+                .Where(c => c.StateId == stateId)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+        }
+
     }
 }
