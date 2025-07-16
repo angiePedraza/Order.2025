@@ -30,9 +30,17 @@ namespace Orders.backend.Repositories.Implemetations
                     Result = entity
                 };
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                return DbUpdateExceptionActionResponse(entity);
+                if (ex.InnerException!.Message.Contains("duplicate"))
+                {
+                    return DbUpdateExceptionActionResponse(entity);
+                }
+                return new ActionResponse<T>
+                {
+                    WasSuccess = false,
+                    Message = ex.Message
+                };
             }
             catch (Exception ex)
             {
@@ -135,14 +143,23 @@ namespace Orders.backend.Repositories.Implemetations
                     Result = entity
                 };
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                return DbUpdateExceptionActionResponse(entity);
+                if (ex.InnerException!.Message.Contains("duplicate"))
+                {
+                    return DbUpdateExceptionActionResponse(entity);
+                }
+                return new ActionResponse<T>
+                {
+                    WasSuccess = false,
+                    Message = ex.Message
+                };
             }
             catch (Exception ex)
             {
                 return ExceptionActionResponse(ex);
             }
+            
         }
         private ActionResponse<T> DbUpdateExceptionActionResponse(T entity)
         {

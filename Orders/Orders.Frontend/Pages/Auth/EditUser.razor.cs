@@ -1,20 +1,18 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using System.Net;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Auth;
 using Orders.Frontend.Repositories;
-using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
-using Orders.Shared.Enums;
 
 namespace Orders.Frontend.Pages.Auth
 {
-    public partial class Register
+    public partial class EditUser
     {
-        private UserDTO userDTO = new();
+        private User? user;
         private List<Country>? countries;
         private List<State>? states;
         private List<City>? cities;
-        private bool loading;
         private string? imageUrl;
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
@@ -24,11 +22,38 @@ namespace Orders.Frontend.Pages.Auth
 
         protected override async Task OnInitializedAsync()
         {
+            await LoadUserAsyc();
             await LoadCountriesAsync();
+            await LoadStatesAsyn(user!.City!.State!.Country!.Id);
+            await LoadCitiesAsyn(user!.City!.State!.Id);
+
+            if (!string.IsNullOrEmpty(user!.Photo))
+            {
+                imageUrl = user.Photo;
+                user.Photo = null;
+            }
         }
+
+        private async Task LoadUserAsyc()
+        {
+            var responseHttp = await Repository.GetAsync<User>($"/api/accounts");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/");
+                    return;
+                }
+                var messageError = await responseHttp.GetErrorMessageAsycn();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
+            }
+            user = responseHttp.Response;
+        }
+
         private void ImageSelected(string imagenBase64)
         {
-            userDTO.Photo = imagenBase64;
+            user!.Photo = imagenBase64;
             imageUrl = null;
         }
 
@@ -37,7 +62,7 @@ namespace Orders.Frontend.Pages.Auth
             var selectedCountry = Convert.ToInt32(e.Value!);
             states = null;
             cities = null;
-            userDTO.CityId = 0;
+            user!.CityId = 0;
             await LoadStatesAsyn(selectedCountry);
         }
 
@@ -45,7 +70,7 @@ namespace Orders.Frontend.Pages.Auth
         {
             var selectedState = Convert.ToInt32(e.Value!);
             cities = null;
-            userDTO.CityId = 0;
+            user!.CityId = 0;
             await LoadCitiesAsyn(selectedState);
         }
 
@@ -58,7 +83,6 @@ namespace Orders.Frontend.Pages.Auth
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-
             countries = responseHttp.Response;
         }
 
@@ -71,7 +95,6 @@ namespace Orders.Frontend.Pages.Auth
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-
             states = responseHttp.Response;
         }
 
@@ -87,13 +110,10 @@ namespace Orders.Frontend.Pages.Auth
 
             cities = responseHttp.Response;
         }
-        private async Task CreteUserAsync()
+
+        private async Task SaveUserAsync()
         {
-            userDTO.UserName = userDTO.Email;
-            userDTO.UserType = UserType.User;
-            loading = true;
-            var responseHttp = await Repository.PostAsync<UserDTO, TokenDTO>("/api/accounts/CreateUser", userDTO);
-            loading = false;
+            var responseHttp = await Repository.PutAsync<User>("/api/accounts", user!);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsycn();
@@ -101,7 +121,6 @@ namespace Orders.Frontend.Pages.Auth
                 return;
             }
 
-            await LoginService.LoginAsync(responseHttp.Response!.Token);
             NavigationManager.NavigateTo("/");
         }
     }
